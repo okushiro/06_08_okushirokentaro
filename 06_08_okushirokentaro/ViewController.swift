@@ -17,6 +17,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override var prefersStatusBarHidden: Bool { return true }
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation { return .slide }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -95,17 +96,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         earthNode0.addChildNode(earthNode)
         earthNode0.position = SCNVector3(5, 0, 0)
         earthNode.runAction(doRotation(0.1))
-        
-        
+
+
         // 月
         let moonAxis = SCNNode()
         earthNode0.addChildNode(moonAxis)
         moonAxis.position = SCNVector3(0, 0, 0)
         moonAxis.runAction(doRotation(3))
-        
+
         let moon = SCNSphere(radius: 0.05)
         moon.firstMaterial?.diffuse.contents = UIImage(named: "moon")
-        
+
         let moonNode = SCNNode(geometry: moon)
         moonAxis.addChildNode(moonNode)
         moonNode.position = SCNVector3(0.4, 0, 0)
@@ -162,42 +163,73 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         saturnNode.addChildNode(ringNode)
         ringNode.position = SCNVector3(-1.05, 0, -1.5)
         ringNode.runAction(SCNAction.rotateBy(x: CGFloat(Float.pi/2), y: 0, z: 0, duration: 0.1))
-        
-        
+
+
         // 天王星
         let uranusAxis = SCNNode()
         scene.rootNode.addChildNode(uranusAxis)
         uranusAxis.position = axis
         uranusAxis.runAction(doRotation(2400))
-        
+
         let uranus = SCNSphere(radius: 0.3)
         uranus.firstMaterial?.diffuse.contents = UIImage(named: "uranus")
-        
+
         let uranusNode = SCNNode(geometry: uranus)
         uranusAxis.addChildNode(uranusNode)
         uranusNode.position = SCNVector3(20, 0, 0)
         uranusNode.runAction(doRotation(0.1))
-        
-        
+
+
         // 海王星
         let neptuneAxis = SCNNode()
         scene.rootNode.addChildNode(neptuneAxis)
         neptuneAxis.position = axis
         neptuneAxis.runAction(doRotation(5000))
-        
+
         let neptune = SCNSphere(radius: 0.3)
         neptune.firstMaterial?.diffuse.contents = UIImage(named: "neptune")
-        
+
         let neptuneNode = SCNNode(geometry: neptune)
         neptuneAxis.addChildNode(neptuneNode)
         neptuneNode.position = SCNVector3(25, 0, 0)
         neptuneNode.runAction(doRotation(0.1))
+
+
+        // 彗星
+        let cometAxis = SCNNode()
+        scene.rootNode.addChildNode(cometAxis)
+        cometAxis.position = SCNVector3(18, 10, -13)
+        cometAxis.runAction(doRotation(10))
+
+        let comet = SCNSphere(radius: 0.1)
+        comet.firstMaterial?.diffuse.contents = UIColor.blue
+
+        let cometNode = SCNNode(geometry: comet)
+        cometAxis.addChildNode(cometNode)
+        cometNode.position = SCNVector3(5,0,0)
+        cometNode.runAction(SCNAction.repeatForever(SCNAction.sequence([
+            SCNAction.moveBy(x: 0, y: -12, z: 0, duration: 5),
+            SCNAction.moveBy(x: 0, y: 12, z: 0, duration: 5),
+        ])))
+        cometNode.runAction(SCNAction.repeatForever(SCNAction.sequence([
+            SCNAction.moveBy(x: 20, y: 0, z: 0, duration: 5),
+            SCNAction.moveBy(x: -20, y: 0, z: 0, duration: 5),
+        ])))
         
+        let tail = SCNText(string: "三", extrusionDepth: 0.2)
+        tail.firstMaterial?.diffuse.contents = UIColor.blue
+        let tailNode = SCNNode(geometry: tail)
+        tailNode.scale = SCNVector3(0.03, 0.01, 0.03)
+        cometNode.addChildNode(tailNode)
+        tailNode.position = SCNVector3(0, -0.08, 0.45)
+        tailNode.runAction(SCNAction.rotateBy(x: 0, y: CGFloat(Float.pi/2), z: 0, duration: 0.1))
         
         
         // Set the scene to the view
         sceneView.scene = scene
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
